@@ -8,22 +8,17 @@
 import SwiftUI
 import CoreData
 
-struct ContentView: View {
+struct MyIssues: View {
+    
+    @StateObject private var viewModel = MyIssuesViewModel()
     @Environment(\.managedObjectContext) private var viewContext
-
-    @FetchRequest(
-        sortDescriptors: [NSSortDescriptor(keyPath: \Item.timestamp, ascending: true)],
-        animation: .default)
-    private var items: FetchedResults<Item>
 
     var body: some View {
         NavigationView {
             List {
-                ForEach(items) { item in
-                    NavigationLink {
-                        Text("Item at \(item.timestamp!, formatter: itemFormatter)")
-                    } label: {
-                        Text(item.timestamp!, formatter: itemFormatter)
+                ForEach(0..<viewModel.issues.count, id: \.self) { issue in
+                    NavigationLink(destination: AllSamplesView(selectedIssue: issue)) {
+                        Text(viewModel.issues[issue].name!)
                     }
                 }
                 .onDelete(perform: deleteItems)
@@ -37,8 +32,10 @@ struct ContentView: View {
                         Label("Add Item", systemImage: "plus")
                     }
                 }
+            }.onAppear {
+                viewModel.loadIssues()
             }
-            Text("Select an item")
+            .navigationTitle("My Issues")
         }
     }
 
@@ -60,7 +57,7 @@ struct ContentView: View {
 
     private func deleteItems(offsets: IndexSet) {
         withAnimation {
-            offsets.map { items[$0] }.forEach(viewContext.delete)
+            offsets.map { viewModel.issues[$0] }.forEach(viewContext.delete)
 
             do {
                 try viewContext.save()
@@ -74,15 +71,15 @@ struct ContentView: View {
     }
 }
 
-private let itemFormatter: DateFormatter = {
-    let formatter = DateFormatter()
-    formatter.dateStyle = .short
-    formatter.timeStyle = .medium
-    return formatter
-}()
-
+//private let itemFormatter: DateFormatter = {
+//    let formatter = DateFormatter()
+//    formatter.dateStyle = .short
+//    formatter.timeStyle = .medium
+//    return formatter
+//}()
+//
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView().environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+        MyIssues().environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
     }
 }
