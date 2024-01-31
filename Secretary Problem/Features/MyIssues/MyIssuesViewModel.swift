@@ -14,12 +14,20 @@ class MyIssuesViewModel: ObservableObject {
     @Published var issues: [Issue] = []
     
     func loadIssues() {
-        
-        let request: NSFetchRequest<Issue> = Issue.fetchRequest()
-        do {
-            issues = try context.fetch(request)
-        } catch {
-            print("error loading issues from CD: \(error)")
+        print("loadissues called")
+        if issues.isEmpty {
+            
+            let request: NSFetchRequest<Issue> = Issue.fetchRequest()
+            let sortDescriptor = NSSortDescriptor(key: "name", ascending: true)
+            request.sortDescriptors = [sortDescriptor]
+            do {
+                issues = try context.fetch(request)
+            } catch {
+                print("error loading issues from CD: \(error)")
+            }
+            for issue in issues {
+                print(issue.name)
+            }
         }
     }
 }

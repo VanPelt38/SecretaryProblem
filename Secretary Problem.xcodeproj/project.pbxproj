@@ -10,6 +10,7 @@
 		2311CC072B115CAF00A968C4 /* HowItWorksView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2311CC062B115CAF00A968C4 /* HowItWorksView.swift */; };
 		2311CC092B115FB600A968C4 /* CreateNewIssueView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2311CC082B115FB600A968C4 /* CreateNewIssueView.swift */; };
 		2311CC0B2B12868D00A968C4 /* CreateNewIssueViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2311CC0A2B12868D00A968C4 /* CreateNewIssueViewModel.swift */; };
+		233FF61D2B61AA4E00DECAA1 /* OptionalBinding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 233FF61C2B61AA4E00DECAA1 /* OptionalBinding.swift */; };
 		235018462B0A99E80004633F /* Secretary_ProblemApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 235018452B0A99E80004633F /* Secretary_ProblemApp.swift */; };
 		235018482B0A99E80004633F /* MyIssues.swift in Sources */ = {isa = PBXBuildFile; fileRef = 235018472B0A99E80004633F /* MyIssues.swift */; };
 		2350184A2B0A99E90004633F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 235018492B0A99E90004633F /* Assets.xcassets */; };
@@ -48,6 +49,7 @@
 		2311CC062B115CAF00A968C4 /* HowItWorksView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HowItWorksView.swift; sourceTree = "<group>"; };
 		2311CC082B115FB600A968C4 /* CreateNewIssueView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateNewIssueView.swift; sourceTree = "<group>"; };
 		2311CC0A2B12868D00A968C4 /* CreateNewIssueViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateNewIssueViewModel.swift; sourceTree = "<group>"; };
+		233FF61C2B61AA4E00DECAA1 /* OptionalBinding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionalBinding.swift; sourceTree = "<group>"; };
 		235018422B0A99E80004633F /* Secretary Problem.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Secretary Problem.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		235018452B0A99E80004633F /* Secretary_ProblemApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Secretary_ProblemApp.swift; sourceTree = "<group>"; };
 		235018472B0A99E80004633F /* MyIssues.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyIssues.swift; sourceTree = "<group>"; };
@@ -155,6 +157,7 @@
 			children = (
 				2350184E2B0A99E90004633F /* Persistence.swift */,
 				235018502B0A99E90004633F /* Secretary_Problem.xcdatamodeld */,
+				233FF61C2B61AA4E00DECAA1 /* OptionalBinding.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -345,6 +348,7 @@
 				2398BF012B290BA300FA263C /* SampleView.swift in Sources */,
 				23640FDC2B1D3F7A00F3F9D4 /* MyIssuesViewModel.swift in Sources */,
 				2311CC092B115FB600A968C4 /* CreateNewIssueView.swift in Sources */,
+				233FF61D2B61AA4E00DECAA1 /* OptionalBinding.swift in Sources */,
 				23640FDE2B1E7A0900F3F9D4 /* AllSamplesView.swift in Sources */,
 				235018752B0D73CA0004633F /* HomeView.swift in Sources */,
 				235018462B0A99E80004633F /* Secretary_ProblemApp.swift in Sources */,

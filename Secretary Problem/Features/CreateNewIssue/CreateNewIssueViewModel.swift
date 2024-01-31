@@ -34,6 +34,10 @@ class CreateNewIssueViewModel: ObservableObject {
         
         for sample in 0...superset! {
             var newSample = Sample(context: context)
+            print("created one new sample")
+            newSample.sampleRelationship = newIssue
+            newSample.number = Int16(sample) + 1
+            newSample.overallScore = 0
         }
         
         saveData()

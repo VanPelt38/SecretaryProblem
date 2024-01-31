@@ -10,23 +10,33 @@ import SwiftUI
 struct AllSamplesView: View {
     
     var selectedIssue: Int?
-    @StateObject private var viewModel = MyIssuesViewModel()
-    @StateObject private var ownViewModel = AllSamplesViewModel()
+    @StateObject private var viewModel = AllSamplesViewModel()
     
     var body: some View {
         ScrollView {
             LazyVGrid(columns: Array(repeating: GridItem(), count: 1), spacing: 10) {
                 if !viewModel.issues.isEmpty {
+                  
+                    
                     ForEach(0..<viewModel.issues[selectedIssue!].superset, id: \.self) { sample in
-                        
-                        NavigationLink(destination: SampleView(issueName: viewModel.issues[selectedIssue!].name!)) {
-                            RoundedRectangle(cornerRadius: 10).fill(ownViewModel.getRectangleColour(subset: Int(viewModel.issues[selectedIssue!].subset), sample: Int(sample)))
+                        let intSmap = Int(sample)
+                        NavigationLink(destination: SampleView(issueName: viewModel.issues[selectedIssue!].name!, sampleNumber: intSmap)) {
+                            RoundedRectangle(cornerRadius: 10).fill(viewModel.getRectangleColour(subset: Int(viewModel.issues[selectedIssue!].subset), sample: intSmap))
                                 .frame(width: 300, height: 150)
                                 .overlay(
                                     VStack {
-                                        
-                                        Text("\(viewModel.issues[selectedIssue!].name!): \(ownViewModel.getSetName(subset: Int(viewModel.issues[selectedIssue!].subset), sample: Int(sample))) Sample \(sample + 1)")
-                                        Text("Overall Rating:")
+                                        if !viewModel.isBestSubSample.isEmpty && intSmap  {
+                                            if viewModel.isBestSubSample[intSmap] {
+                                                Image(systemName: "star.fill").padding()
+                                            }
+                                        }
+                                        Text("\(viewModel.issues[selectedIssue!].name!): \(viewModel.getSetName(subset: Int(viewModel.issues[selectedIssue!].subset), sample: intSmap)) \(intSmap + 1)")
+                                        if !viewModel.sampleNames.isEmpty {
+                                            Text(viewModel.sampleNames[intSmap])
+                                        }
+                                        if !viewModel.sampleOverallScores.isEmpty {
+                                            Text("Overall Rating: \(viewModel.sampleOverallScores[intSmap])")
+                                        }
                                     }.foregroundColor(.black)
                                 )
                             
@@ -40,7 +50,7 @@ struct AllSamplesView: View {
             .padding()
         }
         .onAppear {
-            viewModel.loadIssues()
+            viewModel.loadIssues(selectedIssue!)
         }
         .background(.white)
     }

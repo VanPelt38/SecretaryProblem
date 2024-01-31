@@ -17,6 +17,7 @@ struct MyIssues: View {
         NavigationView {
             List {
                 ForEach(0..<viewModel.issues.count, id: \.self) { issue in
+                    
                     NavigationLink(destination: AllSamplesView(selectedIssue: issue)) {
                         Text(viewModel.issues[issue].name!)
                     }
@@ -57,8 +58,11 @@ struct MyIssues: View {
 
     private func deleteItems(offsets: IndexSet) {
         withAnimation {
+            
             offsets.map { viewModel.issues[$0] }.forEach(viewContext.delete)
-
+            offsets.sorted(by: >).forEach { index in
+                viewModel.issues.remove(at: index)
+            }
             do {
                 try viewContext.save()
             } catch {

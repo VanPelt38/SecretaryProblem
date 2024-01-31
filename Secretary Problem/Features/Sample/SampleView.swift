@@ -11,67 +11,82 @@ struct SampleView: View {
     
     @State private var sampleName: String = ""
     @State var issueName: String
+    @State var sampleNumber: Int
+    @State var overallScore: Int = 0
     @State private var criteriaRatings: [Int] = [1]
-    @StateObject private var viewModel = SampleViewModel()
+    @ObservedObject private var viewModel = SampleViewModel()
     @State private var issueLoaded = false
     @State private var showDismissAlert = false
+//    @State private var sampleTextFieldValue = viewModel.currentSample.name
+    
     @Environment(\.dismiss) var dismiss
     
     var body: some View {
-        let _ = print("this is overall score: \(viewModel.issue.isOverallScore)")
-        let _ = print("this is fetched issue in view: \(viewModel.issue)")
-        let _ = print("this is criteria count in view: \(viewModel.criteriaCount)")
-        ScrollView {
-            VStack {
-                HStack {
-                    Text("Sample Name:").padding()
-                    TextField("choose name", text: $sampleName).foregroundColor(.black).padding().textFieldStyle(RoundedBorderTextFieldStyle() )
-                }
+       
+            ScrollView {
                 
-                    if !viewModel.issue.isOverallScore {
+                VStack {
+                    if let issue = viewModel.issue {
+                        HStack {
+                            Text("Sample Name:").padding()
+                            TextField("choose name", text: $viewModel.sampleName).foregroundColor(.black).padding().textFieldStyle(RoundedBorderTextFieldStyle())
+                        }
                         
-                        ForEach(0..<(viewModel.criteriaCount), id: \.self) { count in
+                        if !issue.isOverallScore {
                             
-                                                        let _ = print("count: \(viewModel.criteria.count)")
-                            Text("\(count + 1). \(viewModel.criteria[count].name! as String):").padding()
+                            ForEach(0..<(viewModel.criteriaCount), id: \.self) { count in
+                                
+                                let _ = print("count: \(viewModel.criteria.count)")
+                                Text("\(count + 1). \(viewModel.criteria[count].name! as String):").padding()
+                                
+                                let _ = print("this is criteria ratings: \(criteriaRatings.count)")
+                                
+                                Picker("", selection: $criteriaRatings[count]) {
+                                    ForEach(0...10, id: \.self) {
+                                        Text("\($0)")
+                                    }
+                                }.pickerStyle(WheelPickerStyle())
+                                //                            .onChange(of: selectedWeight) { newValue in
+                                //
+                                //                        }
+                                
+                                
+                            }
+                        }
+                       
+                                Text("Overall Score:").padding()
+                        Picker("", selection: $viewModel.overallScore) {
+                                    ForEach(0...10, id: \.self) {
+                                        Text("\($0)")
+                                    }
+                                }.pickerStyle(WheelPickerStyle())
+                            .padding()
+                            .disabled(!issue.isOverallScore)
+                        
+                        Button("Save") {
+                            showDismissAlert = true
+                            viewModel.updateSample(sampleNumber: sampleNumber + 1, criteriaRatings: criteriaRatings)
                             
-                            let _ = print("this is criteria ratings: \(criteriaRatings.count)")
-                            
-                            Picker("", selection: $criteriaRatings[count + 1]) {
-                                ForEach(0...10, id: \.self) {
-                                    Text("\($0)")
-                                }
-                            }.pickerStyle(WheelPickerStyle())
-                            //                            .onChange(of: selectedWeight) { newValue in
-                            //
-                            //                        }
-                            
+                        }.padding().alert(isPresented: $showDismissAlert) {
+                            Alert(title: Text("Success!"), message: Text("Your sample has been updated."), dismissButton: .default(Text("OK")) {
+                                dismiss()
+                            })
                             
                         }
                     }
-                Button("Save") {
-                    showDismissAlert = true
                     
-                    viewModel.updateSample()
-                    
-                }.padding().alert(isPresented: $showDismissAlert) {
-                    Alert(title: Text("Success!"), message: Text("Your sample has been updated."), dismissButton: .default(Text("OK")) {
-                        dismiss()
-                    })
-                    
-                }
+                }.foregroundColor(.blue)
+                    .background(.green)
+            }.onAppear {
+                viewModel.loadIssue(issueName: issueName, sampleNumber: sampleNumber)
+                criteriaRatings = viewModel.criteriaArray
+                self.issueLoaded.toggle()
+            }
+            .onChange(of: viewModel.criteriaArray) { newValue in
                 
-                
-            }.foregroundColor(.blue)
-                .background(.green)
-        }.onAppear {
-            viewModel.loadIssue(issueName: issueName)
-            criteriaRatings = viewModel.criteriaArray
-            self.issueLoaded.toggle()
-        }
-        .onChange(of: viewModel.criteriaArray) { newValue in
-                   
-                }
+            }
+        
+        
     }
 }
 

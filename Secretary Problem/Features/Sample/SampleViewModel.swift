@@ -7,16 +7,20 @@
 
 import Foundation
 import CoreData
+import SwiftUI
 
 class SampleViewModel: ObservableObject {
     
     let context = PersistenceController.shared.container.viewContext
-    @Published var issue = Issue(context: PersistenceController.shared.container.viewContext)
+    @Published var issue: Issue?
     @Published var criteria: [Criterion] = []
     @Published var criteriaCount = 0
     @Published var criteriaArray: [Int] = [1]
+    @Published var currentSample: Sample?
+    @Published var sampleName = ""
+    @Published var overallScore = 0
     
-    func loadIssue(issueName: String) {
+    func loadIssue(issueName: String, sampleNumber: Int) {
         
         let request: NSFetchRequest<Issue> = Issue.fetchRequest()
         
@@ -28,9 +32,10 @@ class SampleViewModel: ObservableObject {
             let result = try context.fetch(request)
             if let fetchedIssue = result.first {
                 issue = fetchedIssue
-                print("this is the fetched issue: \(issue)")
+ 
                 if let criteriaSet = fetchedIssue.relationship as? Set<Criterion> {
                     for criterion in criteriaSet {
+                        
                         let crit = Criterion(context: PersistenceController.shared.container.viewContext)
                         crit.name = criterion.name
                         crit.weight = criterion.weight
@@ -38,7 +43,17 @@ class SampleViewModel: ObservableObject {
                         criteriaCount += 1
                         criteriaArray.append(1)
                     }
-                    print("this is criteria count: \(criteriaCount)")
+                    criteriaArray.removeLast()
+                }
+                if let theSamples = fetchedIssue.sampleRelationship as? Set<Sample> {
+                    let sortedSamples = theSamples.sorted { $0.number < $1.number }
+                    for sample in sortedSamples {
+                        if sample.number == sampleNumber + 1 {
+                            currentSample = sample
+                            sampleName = currentSample!.name ?? "Hello"
+                            overallScore = Int(currentSample?.overallScore ?? 0)
+                        }
+                    }
                 }
             }
         } catch {
@@ -46,12 +61,52 @@ class SampleViewModel: ObservableObject {
         }
     }
     
-    func updateSample(sampleNumber: Int, sampleName: String, criteriaRatings: [Int]) {
+    func updateSample(sampleNumber: Int, criteriaRatings: [Int]) {
         
-        calculateOverallScore(overallScore: issue.)
+        if let iss = issue {
+            if iss.isOverallScore {
+                
+                if let samples = iss.sampleRelationship as? Set<Sample> {
+                   
+                    for sam in samples {
+                       
+                        if sam.number == sampleNumber {
+                          
+                            sam.overallScore = Int16(overallScore)
+                            sam.name = sampleName
+                        }
+                  
+                    }
+                }
+                
+            }
+            
+            do {
+                try context.save()
+            } catch {
+                print("error saving CD: \(error)")
+            }
+        }
+        
+        print(calculateOverallScore(criteriaRatings: criteriaRatings))
     }
     
-    func calculateOverallScore(overallScore: Int, criteriaRatings: [Int]) -> Int {
+    func calculateOverallScore(criteriaRatings: [Int]) -> Int {
         
+        var totalWeightedScore = 0
+        var weightSum = 0
+        var finalScore = 0
+        
+        for (index, rating) in criteriaRatings.enumerated() {
+            
+            var weightRate = rating * Int(criteria[index].weight)
+            totalWeightedScore += weightRate
+            weightSum += Int(criteria[index].weight)
+        }
+
+        let scaledWeight = Float(weightSum) / Float(criteriaRatings.count)
+        var floatScore = Float(totalWeightedScore) / scaledWeight
+        finalScore = Int(floatScore.rounded())
+        return finalScore
     }
 }

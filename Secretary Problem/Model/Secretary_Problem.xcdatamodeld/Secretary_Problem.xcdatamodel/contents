@@ -18,8 +18,9 @@
         <attribute name="timestamp" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
     </entity>
     <entity name="Sample" representedClassName="Sample" syncable="YES" codeGenerationType="class">
-        <attribute name="name" optional="YES" attributeType="String"/>
-        <attribute name="overallScore" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="name" attributeType="String" defaultValueString="hi"/>
+        <attribute name="number" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="overallScore" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <relationship name="sampleRelationship" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Issue" inverseName="sampleRelationship" inverseEntity="Issue"/>
     </entity>
 </model>
