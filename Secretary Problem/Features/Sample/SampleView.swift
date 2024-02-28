@@ -36,20 +36,20 @@ struct SampleView: View {
                             
                             ForEach(0..<(viewModel.criteriaCount), id: \.self) { count in
                                 
-                                let _ = print("count: \(viewModel.criteria.count)")
+                                
                                 Text("\(count + 1). \(viewModel.criteria[count].name! as String):").padding()
-                                
-                                let _ = print("this is criteria ratings: \(criteriaRatings.count)")
-                                
+                                if !criteriaRatings.isEmpty {
+                                    let _ = print("count: \(criteriaRatings.count)")
                                 Picker("", selection: $criteriaRatings[count]) {
                                     ForEach(0...10, id: \.self) {
                                         Text("\($0)")
                                     }
                                 }.pickerStyle(WheelPickerStyle())
+                                
                                 //                            .onChange(of: selectedWeight) { newValue in
                                 //
                                 //                        }
-                                
+                            }
                                 
                             }
                         }

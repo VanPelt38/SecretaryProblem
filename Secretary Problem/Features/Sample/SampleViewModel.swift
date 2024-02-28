@@ -26,7 +26,7 @@ class SampleViewModel: ObservableObject {
         
         request.predicate = NSPredicate(format: "name == %@", issueName)
         request.relationshipKeyPathsForPrefetching = ["relationship"]
-        
+        criteriaArray = [1]
         
         do {
             let result = try context.fetch(request)

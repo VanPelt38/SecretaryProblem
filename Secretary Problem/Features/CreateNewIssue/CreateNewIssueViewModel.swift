@@ -32,7 +32,7 @@ class CreateNewIssueViewModel: ObservableObject {
             criteriaArray.append(newCriterion)
         }
         
-        for sample in 0...superset! {
+        for sample in 0..<superset! {
             var newSample = Sample(context: context)
             print("created one new sample")
             newSample.sampleRelationship = newIssue

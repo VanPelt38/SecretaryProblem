@@ -21,16 +21,21 @@ struct AllSamplesView: View {
                     ForEach(0..<viewModel.issues[selectedIssue!].superset, id: \.self) { sample in
                         let intSmap = Int(sample)
                         NavigationLink(destination: SampleView(issueName: viewModel.issues[selectedIssue!].name!, sampleNumber: intSmap)) {
-                            RoundedRectangle(cornerRadius: 10).fill(viewModel.getRectangleColour(subset: Int(viewModel.issues[selectedIssue!].subset), sample: intSmap))
+                            RoundedRectangle(cornerRadius: 10).fill(viewModel.getRectangleColour(subset: Int(viewModel.issues[selectedIssue!].subset - 1), sample: intSmap))
                                 .frame(width: 300, height: 150)
                                 .overlay(
                                     VStack {
-                                        if !viewModel.isBestSubSample.isEmpty && intSmap  {
+                                        if !viewModel.isBestSubSample.isEmpty && intSmap <= viewModel.isBestSubSample.count - 1 {
                                             if viewModel.isBestSubSample[intSmap] {
-                                                Image(systemName: "star.fill").padding()
+                                                Image(systemName: "star.fill").padding().foregroundColor(.gray)
                                             }
                                         }
-                                        Text("\(viewModel.issues[selectedIssue!].name!): \(viewModel.getSetName(subset: Int(viewModel.issues[selectedIssue!].subset), sample: intSmap)) \(intSmap + 1)")
+                                        if !viewModel.isStoppingPoint.isEmpty && (intSmap + 1) > viewModel.isBestSubSample.count {
+                                            if viewModel.isStoppingPoint[(intSmap) - Int(viewModel.issues[selectedIssue!].subset)] {
+                                                Image(systemName: "star.fill").padding().foregroundColor(.yellow)
+                                            }
+                                        }
+                                        Text("\(viewModel.issues[selectedIssue!].name!): \(viewModel.getSetName(subset: Int(viewModel.issues[selectedIssue!].subset - 1), sample: intSmap)) \(intSmap + 1)")
                                         if !viewModel.sampleNames.isEmpty {
                                             Text(viewModel.sampleNames[intSmap])
                                         }

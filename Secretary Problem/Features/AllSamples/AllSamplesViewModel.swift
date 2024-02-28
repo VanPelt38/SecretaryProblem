@@ -15,7 +15,11 @@ class AllSamplesViewModel: ObservableObject {
     @Published var issues: [Issue] = []
     @Published var sampleNames: [String] = []
     @Published var sampleOverallScores: [Int] = []
+    @Published var subsetOverallScores: [Int] = []
     @Published var isBestSubSample: [Bool] = []
+    @Published var isStoppingPoint: [Bool] = []
+    var stoppingPointReached = false
+    var bestSubSampleScore = 0
     
     func loadIssues(_ selectedIssue: Int) {
 
@@ -23,6 +27,10 @@ class AllSamplesViewModel: ObservableObject {
         sampleNames = []
         sampleOverallScores = []
         isBestSubSample = []
+        subsetOverallScores = []
+        isStoppingPoint = []
+        stoppingPointReached = false
+        bestSubSampleScore = 0
             
             let request: NSFetchRequest<Issue> = Issue.fetchRequest()
             let sortDescriptor = NSSortDescriptor(key: "name", ascending: true)
@@ -41,22 +49,35 @@ class AllSamplesViewModel: ObservableObject {
                             if let name = sample.name {
                                 sampleNames.append(name)
                             }
-                            
                                 sampleOverallScores.append(Int(sample.overallScore))
                         }
-                        for _ in 0...Int(issue.subset) {
+                        for number in 0..<Int(issue.subset) {
                             isBestSubSample.append(false)
+                            subsetOverallScores.append(sampleOverallScores[number])
                         }
                         
-                        if let highestValue = sampleOverallScores.max() {
+                        if let highestValue = subsetOverallScores.max() {
                             if highestValue > 0 {
-                                for (index, item) in sampleOverallScores.enumerated() {
+                                for (index, item) in subsetOverallScores.enumerated() {
                                     if item == highestValue {
                                         isBestSubSample[index] = true
+                                        bestSubSampleScore = item
                                     }
                                 }
                             }
                             }
+                        let supersetArray = sampleOverallScores[(Int(issue.subset))..<Int(issue.superset)]
+                        
+                        if let highestSuperSetValue = supersetArray.max() {
+                            for v in supersetArray {
+                                if v == highestSuperSetValue && v != 0 && v >= bestSubSampleScore && !stoppingPointReached {
+                                    isStoppingPoint.append(true)
+                                    stoppingPointReached = true
+                                } else {
+                                    isStoppingPoint.append(false)
+                                }
+                            }
+                        }
                     }
                     }
                     
