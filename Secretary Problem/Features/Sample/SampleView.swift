@@ -35,11 +35,8 @@ struct SampleView: View {
                         if !issue.isOverallScore {
                             
                             ForEach(0..<(viewModel.criteriaCount), id: \.self) { count in
-                                
-                                
                                 Text("\(count + 1). \(viewModel.criteria[count].name! as String):").padding()
-                                if !criteriaRatings.isEmpty {
-                                    let _ = print("count: \(criteriaRatings.count)")
+                                if !criteriaRatings.isEmpty && criteriaRatings.count == viewModel.criteriaCount {
                                 Picker("", selection: $criteriaRatings[count]) {
                                     ForEach(0...10, id: \.self) {
                                         Text("\($0)")

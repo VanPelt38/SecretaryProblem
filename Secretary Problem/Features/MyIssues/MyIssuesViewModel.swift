@@ -14,7 +14,6 @@ class MyIssuesViewModel: ObservableObject {
     @Published var issues: [Issue] = []
     
     func loadIssues() {
-        print("loadissues called")
         if issues.isEmpty {
             
             let request: NSFetchRequest<Issue> = Issue.fetchRequest()
@@ -24,9 +23,6 @@ class MyIssuesViewModel: ObservableObject {
                 issues = try context.fetch(request)
             } catch {
                 print("error loading issues from CD: \(error)")
-            }
-            for issue in issues {
-                print(issue.name)
             }
         }
     }

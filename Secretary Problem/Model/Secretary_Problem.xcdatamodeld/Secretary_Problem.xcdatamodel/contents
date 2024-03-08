@@ -2,8 +2,9 @@
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="21754" systemVersion="22C65" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="Criterion" representedClassName="Criterion" syncable="YES" codeGenerationType="class">
         <attribute name="name" optional="YES" attributeType="String"/>
+        <attribute name="score" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="weight" optional="YES" attributeType="Integer 16" defaultValueString="1" usesScalarValueType="YES"/>
-        <relationship name="relationship" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Issue" inverseName="relationship" inverseEntity="Issue"/>
+        <relationship name="criterionRelationship" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Sample" inverseName="criterionRelationship" inverseEntity="Sample"/>
     </entity>
     <entity name="Issue" representedClassName=".Issue" syncable="YES" codeGenerationType="class">
         <attribute name="criteriaCount" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
@@ -11,7 +12,6 @@
         <attribute name="name" optional="YES" attributeType="String"/>
         <attribute name="subset" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="superset" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
-        <relationship name="relationship" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Criterion" inverseName="relationship" inverseEntity="Criterion"/>
         <relationship name="sampleRelationship" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Sample" inverseName="sampleRelationship" inverseEntity="Sample"/>
     </entity>
     <entity name="Item" representedClassName="Item" syncable="YES" codeGenerationType="class">
@@ -21,6 +21,7 @@
         <attribute name="name" attributeType="String" defaultValueString="hi"/>
         <attribute name="number" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="overallScore" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <relationship name="criterionRelationship" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Criterion" inverseName="criterionRelationship" inverseEntity="Criterion"/>
         <relationship name="sampleRelationship" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Issue" inverseName="sampleRelationship" inverseEntity="Issue"/>
     </entity>
 </model>

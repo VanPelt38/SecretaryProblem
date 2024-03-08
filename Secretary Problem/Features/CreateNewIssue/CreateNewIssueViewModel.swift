@@ -15,7 +15,6 @@ class CreateNewIssueViewModel: ObservableObject {
     func createNewIssue(issueTitle: String?, superset: Int?, isOverallScore: Bool, criteriaCount: Int?, criteriaNames: [String?], criteriaWeights: [Int?]) {
      
         let subset = calculateSubset(superset: superset!)
-        var criteriaArray: [Criterion] = []
         
         let newIssue = Issue(context: context)
         newIssue.name = issueTitle!
@@ -24,20 +23,20 @@ class CreateNewIssueViewModel: ObservableObject {
         newIssue.isOverallScore = isOverallScore
         newIssue.criteriaCount = Int16(criteriaCount!)
 
-        for (index, name) in criteriaNames.enumerated() {
-            var newCriterion = Criterion(context: context)
-            newCriterion.name = name
-            newCriterion.weight = Int16(criteriaWeights[index]!)
-            newCriterion.relationship = newIssue
-            criteriaArray.append(newCriterion)
-        }
         
         for sample in 0..<superset! {
             var newSample = Sample(context: context)
-            print("created one new sample")
             newSample.sampleRelationship = newIssue
             newSample.number = Int16(sample) + 1
             newSample.overallScore = 0
+            
+            for (index, name) in criteriaNames.enumerated() {
+                var newCriterion = Criterion(context: context)
+                newCriterion.name = name
+                newCriterion.weight = Int16(criteriaWeights[index]!)
+                newCriterion.score = 0
+                newCriterion.criterionRelationship = newSample
+            }
         }
         
         saveData()
